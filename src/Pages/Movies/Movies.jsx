@@ -1,39 +1,29 @@
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { updScrollPosition } from 'utils/scroll';
+import { normalizeResults } from 'utils/normalizeResponse';
 import Searchbar from 'components/Searchbar';
 import MoviesList from 'components/MoviesList';
 import theMovie from 'services/theMovie';
-import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState, useLayoutEffect } from 'react';
-import { toast } from 'react-toastify';
 import badRequestImg from 'images/badRequestImg.png';
 import Loader from 'components/Loader';
-
-const normalizeResults = data =>
-  data.map(
-    ({ id, poster_path, original_title, vote_average, release_date }) => ({
-      id,
-      poster_path,
-      original_title,
-      vote_average,
-      release_date,
-    })
-  );
-
-const savePosition = () => {
-  sessionStorage.setItem('moviesPageYPosition', window.pageYOffset);
-};
 
 const Movies = () => {
   const [params] = useSearchParams();
   const [movies, setMovies] = useState(null);
   const [query, setQuery] = useState(() => params.get('query'));
   const [isLoading, setIsLoading] = useState(false);
+  const [yPos] = useState(() => {
+    const positions = sessionStorage.getItem('scrollPositions');
+    return JSON.parse(positions)?.moviesPage ?? 0;
+  });
 
   useEffect(() => {
-    const yPos = sessionStorage.getItem('moviesPageYPosition');
-    if (yPos !== null && movies?.length !== 0) {
+    if (movies?.length !== 0) {
       window.scrollTo(0, yPos);
     }
-  }, [movies]);
+  }, [yPos, movies]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -65,15 +55,17 @@ const Movies = () => {
     setQuery(query);
   };
 
+  const onMovieCardClick = () => updScrollPosition('moviesPage');
+
   return (
     <>
       <Searchbar onSubmit={onSubmit} />
       {isLoading && <Loader />}
       {movies !== null && movies.length !== 0 && (
-        <MoviesList savePosition={savePosition} movies={movies} />
+        <MoviesList onMovieCardClick={onMovieCardClick} movies={movies} />
       )}
       {movies !== null && movies.length === 0 && (
-        <img src={badRequestImg} alt="bad request image" />
+        <img src={badRequestImg} alt="bad request" />
       )}
     </>
   );

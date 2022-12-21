@@ -1,7 +1,7 @@
 import { Box } from 'components/Box';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useParams, useLocation } from 'react-router-dom';
 import { formateDate, formateVote, formateGenres } from 'utils/formatting';
 import theMovie from 'services/theMovie';
 import {
@@ -15,8 +15,11 @@ import {
   LinksList,
   NavLinkStyled,
 } from './MovieDetails.styled';
+import { useRef } from 'react';
 
 const MovieDetails = () => {
+  const location = useLocation();
+  const linksRef = useRef();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   useEffect(() => {
@@ -81,15 +84,19 @@ const MovieDetails = () => {
           <AboutMovieText>{overview}</AboutMovieText>
         </MovieInfo>
       </Box>
-      <LinksList>
+      <LinksList ref={linksRef}>
         <li>
-          <NavLinkStyled to="cast">Cast</NavLinkStyled>
+          <NavLinkStyled to="cast" state={{ from: location.state.from }}>
+            Cast
+          </NavLinkStyled>
         </li>
         <li>
-          <NavLinkStyled to="reviews">Reviews</NavLinkStyled>
+          <NavLinkStyled to="reviews" state={{ from: location.state.from }}>
+            Reviews
+          </NavLinkStyled>
         </li>
       </LinksList>
-      <Outlet />
+      <Outlet context={linksRef} />
     </>
   );
 };

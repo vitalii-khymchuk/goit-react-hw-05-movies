@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 
 export const SearchbarWrap = styled.div`
-  top: 0;
-  left: 0;
   position: sticky;
+  top: 25px;
   z-index: 1100;
   display: flex;
   justify-content: center;

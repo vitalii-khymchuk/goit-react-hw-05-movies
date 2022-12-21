@@ -9,7 +9,14 @@ const Layout = () => {
   const backLinkHref = location.state?.from ?? '/';
   return (
     <Box display="grid" gridTemplateRows="60px 1fr">
-      <Box as="header" bg="#3f51b5">
+      <Box
+        as="header"
+        bg="#3f51b5"
+        position="sticky"
+        top="0"
+        left="0"
+        zIndex="1101"
+      >
         <nav>
           <Box as="ul" display="flex">
             <NavItem>

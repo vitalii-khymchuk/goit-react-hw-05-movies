@@ -47,6 +47,8 @@ const AboutMovieText = styled.p`
 `;
 
 const LinksList = styled.ul`
+  position: sticky;
+  top: 35px;
   display: flex;
   background-color: #3f51b5;
   height: 64px;

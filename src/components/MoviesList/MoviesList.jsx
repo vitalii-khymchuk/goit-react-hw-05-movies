@@ -23,7 +23,7 @@ const LinkToMovie = ({ id, children }) => {
   );
 };
 
-const MoviesList = ({ movies, savePosition }) => {
+const MoviesList = ({ movies, onMovieCardClick }) => {
   if (movies.length === 0) {
     return;
   }
@@ -31,7 +31,7 @@ const MoviesList = ({ movies, savePosition }) => {
     <MoviesGrid>
       {movies.map(
         ({ id, poster_path, original_title, vote_average, release_date }) => (
-          <MovieItem key={id} onClick={savePosition}>
+          <MovieItem key={id} onClick={onMovieCardClick}>
             <LinkToMovie id={id}>
               <Wrapper>
                 <Poster

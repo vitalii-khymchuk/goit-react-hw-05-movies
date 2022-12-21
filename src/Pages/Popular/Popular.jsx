@@ -1,35 +1,32 @@
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { updScrollPosition } from 'utils/scroll';
+import { normalizeResults } from 'utils/normalizeResponse';
 import { Header } from './Popular.styled';
 import MoviesList from 'components/MoviesList';
-import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
-const { useEffect } = require('react');
-const { useState } = require('react');
-const { default: theMovie } = require('services/theMovie');
-
-const savePosition = () => {
-  sessionStorage.setItem('popularPageYPosition', window.pageYOffset);
-};
-
-const normalizeResults = data =>
-  data.map(
-    ({ id, poster_path, original_title, vote_average, release_date }) => ({
-      id,
-      poster_path,
-      original_title,
-      vote_average,
-      release_date,
-    })
-  );
+import theMovie from 'services/theMovie';
 
 const Popular = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Код нижче відповідає за відновлення положення скролу, готового рішення я не знайшов.
+  // В ідеалі я хотів би зберігати позицію скролу коли компонент розмонтовується,
+  // але ніяк не зміг написати код який спрацювував би тільки при розмонтуванні
+  // (не спрацьовуючи при цьому на першому рендері, коли скрол = 0),
+  // тому я привязав збереження позиції скролу до кліку по фільмові.
+  const [yPos] = useState(() => {
+    const positions = sessionStorage.getItem('scrollPositions');
+    return JSON.parse(positions)?.popularPage ?? 0;
+  });
   useEffect(() => {
-    const yPos = sessionStorage.getItem('popularPageYPosition');
-    if (yPos !== null && movies?.length !== 0) {
+    if (movies?.length !== 0) {
       window.scrollTo(0, yPos);
+      sessionStorage.setItem('scrollPositions', null);
     }
-  }, [movies]);
+  }, [movies, yPos]);
+
   useEffect(() => {
     const controller = new AbortController();
     const getPopular = async () => {
@@ -51,11 +48,13 @@ const Popular = () => {
       controller.abort();
     };
   }, []);
+
+  const onMovieCardClick = () => updScrollPosition('popularPage');
   return (
     <>
       <Header>Trending today:</Header>
       {isLoading && <Loader />}
-      <MoviesList savePosition={savePosition} movies={movies} />
+      <MoviesList onMovieCardClick={onMovieCardClick} movies={movies} />
     </>
   );
 };
