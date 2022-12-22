@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Router basename="/react-homework-template">
+    <Router basename="/goit-react-hw-05-movies/">
       <App />
       <ToastContainer />
     </Router>
