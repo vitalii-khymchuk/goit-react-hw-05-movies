@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { formateDate, formatePhoto } from 'utils/formatting';
 import { Box } from 'components/Box';
@@ -54,6 +55,19 @@ const MoviesList = ({ movies, onMovieCardClick }) => {
       )}
     </MoviesGrid>
   );
+};
+
+MoviesList.propTypes = {
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      poster_path: PropTypes.string,
+      original_title: PropTypes.string.isRequired,
+      vote_average: PropTypes.number,
+      release_date: PropTypes.string,
+    })
+  ).isRequired,
+  onMovieCardClick: PropTypes.func,
 };
 
 export default MoviesList;

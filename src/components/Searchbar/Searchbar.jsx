@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useSearchParams } from 'react-router-dom';
 import { SearchbarWrap, Form, Input, SearchBtn } from './Searchbar.styled';
 import { toast } from 'react-toastify';
 
-export default function Searchbar({ onSubmit }) {
+const Searchbar = ({ onSubmit }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get('query') ?? '';
 
@@ -42,4 +43,8 @@ export default function Searchbar({ onSubmit }) {
       </Form>
     </SearchbarWrap>
   );
-}
+};
+
+Searchbar.propTypes = { onSubmit: PropTypes.func };
+
+export default Searchbar;

@@ -2,7 +2,7 @@
   "name": "react-homework-template",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://vitalii-khymchuk.github.io/react-homework-template/",
+  "homepage": "https://vitalii-khymchuk.github.io/goit-react-hw-05-movies/",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -20,7 +20,6 @@
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
-    "react-use": "^17.4.0",
     "styled-system": "^5.1.5",
     "web-vitals": "^2.1.3"
   },
