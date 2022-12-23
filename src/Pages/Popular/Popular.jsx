@@ -1,31 +1,25 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { updScrollPosition } from 'utils/scroll';
 import { normalizeResults } from 'utils/normalizeResponse';
 import { Header } from './Popular.styled';
 import MoviesList from 'components/MoviesList';
 import Loader from 'components/Loader';
 import theMovie from 'services/theMovie';
+import { useLocation } from 'react-router-dom';
 
 const Popular = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+  const topPos = location.state?.offsetTop;
 
-  // Код нижче відповідає за відновлення положення скролу, готового рішення я не знайшов.
-  // В ідеалі я хотів би зберігати позицію скролу коли компонент розмонтовується,
-  // але ніяк не зміг написати код який спрацювував би тільки при розмонтуванні
-  // (не спрацьовуючи при цьому на першому рендері, коли скрол = 0),
-  // тому я привязав збереження позиції скролу до кліку по фільмові.
-  const [yPos] = useState(() => {
-    const positions = sessionStorage.getItem('scrollPositions');
-    return JSON.parse(positions)?.popularPage ?? 0;
-  });
   useEffect(() => {
-    if (movies?.length !== 0) {
-      window.scrollTo(0, yPos);
-      sessionStorage.setItem('scrollPositions', null);
-    }
-  }, [movies, yPos]);
+    if (!movies.length || !topPos) return;
+    window.scroll({
+      top: topPos - 55,
+      behavior: 'smooth',
+    });
+  }, [topPos, movies]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -49,12 +43,11 @@ const Popular = () => {
     };
   }, []);
 
-  const onMovieCardClick = () => updScrollPosition('popularPage');
   return (
     <>
       <Header>Trending today:</Header>
       {isLoading && <Loader />}
-      <MoviesList onMovieCardClick={onMovieCardClick} movies={movies} />
+      <MoviesList movies={movies} />
     </>
   );
 };

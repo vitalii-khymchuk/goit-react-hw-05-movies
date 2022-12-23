@@ -86,12 +86,12 @@ const MovieDetails = () => {
       </Box>
       <LinksList ref={linksRef}>
         <li>
-          <NavLinkStyled to="cast" state={{ from: location.state.from }}>
+          <NavLinkStyled to="cast" state={{ ...location.state }}>
             Cast
           </NavLinkStyled>
         </li>
         <li>
-          <NavLinkStyled to="reviews" state={{ from: location.state.from }}>
+          <NavLinkStyled to="reviews" state={{ ...location.state }}>
             Reviews
           </NavLinkStyled>
         </li>

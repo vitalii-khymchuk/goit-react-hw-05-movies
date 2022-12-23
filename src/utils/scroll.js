@@ -7,9 +7,4 @@ const scrollDownTo = value => {
   }
 };
 
-const updScrollPosition = pageName => {
-  const currentPosition = JSON.stringify({ [pageName]: window.pageYOffset });
-  sessionStorage.setItem('scrollPositions', currentPosition);
-};
-
-export { scrollDownTo, updScrollPosition };
+export { scrollDownTo };

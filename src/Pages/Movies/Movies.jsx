@@ -1,7 +1,6 @@
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { updScrollPosition } from 'utils/scroll';
 import { normalizeResults } from 'utils/normalizeResponse';
 import Searchbar from 'components/Searchbar';
 import MoviesList from 'components/MoviesList';
@@ -14,16 +13,16 @@ const Movies = () => {
   const [movies, setMovies] = useState(null);
   const [query, setQuery] = useState(() => params.get('query'));
   const [isLoading, setIsLoading] = useState(false);
-  const [yPos] = useState(() => {
-    const positions = sessionStorage.getItem('scrollPositions');
-    return JSON.parse(positions)?.moviesPage ?? 0;
-  });
+  const location = useLocation();
+  const topPos = location.state?.offsetTop;
 
   useEffect(() => {
-    if (movies?.length !== 0) {
-      window.scrollTo(0, yPos);
-    }
-  }, [yPos, movies]);
+    if (!movies?.length || !topPos) return;
+    window.scroll({
+      top: topPos - 120,
+      behavior: 'smooth',
+    });
+  }, [topPos, movies]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -55,15 +54,11 @@ const Movies = () => {
     setQuery(query);
   };
 
-  const onMovieCardClick = () => updScrollPosition('moviesPage');
-
   return (
     <>
       <Searchbar onSubmit={onSubmit} />
       {isLoading && <Loader />}
-      {movies !== null && movies.length !== 0 && (
-        <MoviesList onMovieCardClick={onMovieCardClick} movies={movies} />
-      )}
+      {movies !== null && movies.length !== 0 && <MoviesList movies={movies} />}
       {movies !== null && movies.length === 0 && (
         <img src={badRequestImg} alt="bad request" />
       )}

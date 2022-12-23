@@ -20,7 +20,9 @@ const Layout = () => {
         <nav>
           <Box as="ul" display="flex">
             <NavItem>
-              <NavLinkStyled to="/">Home</NavLinkStyled>
+              <NavLinkStyled to="/" end>
+                Home
+              </NavLinkStyled>
             </NavItem>
             <NavItem>
               <NavLinkStyled to="movies" end>
@@ -29,7 +31,11 @@ const Layout = () => {
             </NavItem>
             {location.pathname !== '/' && (
               <NavItem>
-                <NavLinkStyled to={backLinkHref} end>
+                <NavLinkStyled
+                  to={backLinkHref}
+                  state={{ ...location.state }}
+                  end
+                >
                   GoBack
                 </NavLinkStyled>
               </NavItem>
