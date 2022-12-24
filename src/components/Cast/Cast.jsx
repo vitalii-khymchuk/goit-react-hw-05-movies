@@ -10,7 +10,15 @@ import theMovie from 'services/theMovie';
 const Cast = () => {
   const [cast, setCast] = useState(null);
   const { movieId } = useParams();
+  const [error, setError] = useState(null);
   const linksRef = useOutletContext().current;
+
+  useEffect(() => {
+    if (error) {
+      toast('Something went wrong. Please reload page...');
+      console.log(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (linksRef) {
@@ -24,19 +32,18 @@ const Cast = () => {
     const controller = new AbortController();
     const getCast = async () => {
       try {
-        const { data } = await theMovie.getCredits({ id: movieId, controller });
-        setCast(normalizeCast(data.cast));
+        const data = await theMovie.getCredits({ id: movieId, controller });
+        if (!data.length) return;
+        setCast(data);
+        setError(null);
       } catch (error) {
-        if (error.message !== 'canceled') {
-          toast('Something went wrong. Please reload page...');
-          console.log(error);
-        }
+        setError(error);
       }
-      return () => {
-        controller.abort();
-      };
     };
     getCast();
+    return () => {
+      controller.abort();
+    };
   }, [movieId]);
 
   return (

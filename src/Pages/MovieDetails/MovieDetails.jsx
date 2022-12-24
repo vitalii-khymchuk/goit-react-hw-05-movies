@@ -22,17 +22,25 @@ const MovieDetails = () => {
   const linksRef = useRef();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (error) {
+      toast('Something went wrong. Please reload page...');
+      console.log(error);
+    }
+  }, [error]);
+
   useEffect(() => {
     const controller = new AbortController();
     const getDetails = async () => {
       try {
-        const { data } = await theMovie.getDetails({ id: movieId, controller });
+        const data = await theMovie.getDetails({ id: movieId, controller });
+        if (data === null) return;
         setMovie(data);
+        setError(null);
       } catch (error) {
-        if (error.message !== 'canceled') {
-          toast('Something went wrong. Please reload page...');
-          console.log(error);
-        }
+        setError(error);
       }
     };
     getDetails();

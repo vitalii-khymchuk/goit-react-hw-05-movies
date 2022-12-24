@@ -13,8 +13,16 @@ const Movies = () => {
   const [movies, setMovies] = useState(null);
   const [query, setQuery] = useState(() => params.get('query'));
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const location = useLocation();
   const topPos = location.state?.offsetTop;
+
+  useEffect(() => {
+    if (error) {
+      toast('Something went wrong. Please reload page...');
+      console.log(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (!movies?.length || !topPos) return;
@@ -32,13 +40,12 @@ const Movies = () => {
       }
       try {
         setIsLoading(true);
-        const { data } = await theMovie.getByQuery({ query, controller });
-        setMovies(normalizeResults(data.results));
+        const data = await theMovie.getByQuery({ query, controller });
+        if (!data.length) return;
+        setMovies(data);
+        setError(null);
       } catch (error) {
-        if (error.message !== 'canceled') {
-          toast('Something went wrong. Please reload page...');
-          console.log(error);
-        }
+        setError(error);
       } finally {
         setIsLoading(false);
       }

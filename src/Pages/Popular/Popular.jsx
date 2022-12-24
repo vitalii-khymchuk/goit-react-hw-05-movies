@@ -10,8 +10,16 @@ import { useLocation } from 'react-router-dom';
 const Popular = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const location = useLocation();
   const topPos = location.state?.offsetTop;
+
+  useEffect(() => {
+    if (error) {
+      toast('Something went wrong. Please reload page...');
+      console.log(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (!movies.length || !topPos) return;
@@ -26,13 +34,12 @@ const Popular = () => {
     const getPopular = async () => {
       try {
         setIsLoading(true);
-        const { data } = await theMovie.getPopular({ controller });
-        setMovies(normalizeResults(data.results));
+        const data = await theMovie.getPopular({ controller });
+        if (!data.length) return;
+        setMovies(data);
+        setError(null);
       } catch (error) {
-        if (error.message !== 'canceled') {
-          toast('Something went wrong. Please reload page...');
-          console.log(error);
-        }
+        setError(error);
       } finally {
         setIsLoading(false);
       }

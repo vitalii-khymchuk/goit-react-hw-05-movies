@@ -10,7 +10,15 @@ import theMovie from 'services/theMovie';
 const Reviews = () => {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState(null);
+  const [error, setError] = useState(null);
   const linksRef = useOutletContext().current;
+
+  useEffect(() => {
+    if (error) {
+      toast('Something went wrong. Please reload page...');
+      console.log(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (linksRef) {
@@ -24,19 +32,17 @@ const Reviews = () => {
     const controller = new AbortController();
     const getReviews = async () => {
       try {
-        const { data } = await theMovie.getReviews({ id: movieId, controller });
-        setReviews(normalizeReviews(data.results));
+        const data = await theMovie.getReviews({ id: movieId, controller });
+        setReviews(data);
+        setError(null);
       } catch (error) {
-        if (error.message !== 'canceled') {
-          toast('Something went wrong. Please reload page...');
-          console.log(error);
-        }
+        setError(error);
       }
-      return () => {
-        controller.abort();
-      };
     };
     getReviews();
+    return () => {
+      controller.abort();
+    };
   }, [movieId]);
 
   const shouldRenderContent = reviews !== null && reviews.length !== 0;
