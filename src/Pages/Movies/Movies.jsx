@@ -1,7 +1,6 @@
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { normalizeResults } from 'utils/normalizeResponse';
 import Searchbar from 'components/Searchbar';
 import MoviesList from 'components/MoviesList';
 import theMovie from 'services/theMovie';

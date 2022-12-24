@@ -3,7 +3,6 @@ import { useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { formatePhoto } from 'utils/formatting';
 import { scrollDownTo } from 'utils/scroll';
-import { normalizeCast } from 'utils/normalizeResponse';
 import { CastGrid, Photo } from './Cast.styled';
 import theMovie from 'services/theMovie';
 

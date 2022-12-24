@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { normalizeResults } from 'utils/normalizeResponse';
 import { Header } from './Popular.styled';
 import MoviesList from 'components/MoviesList';
 import Loader from 'components/Loader';

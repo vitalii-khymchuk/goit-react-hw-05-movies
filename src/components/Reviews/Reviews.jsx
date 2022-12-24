@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { scrollDownTo } from 'utils/scroll';
-import { normalizeReviews } from 'utils/normalizeResponse';
 import { Box } from 'components/Box';
 import { ReviewItem } from './Reviews.styled';
 import theMovie from 'services/theMovie';
